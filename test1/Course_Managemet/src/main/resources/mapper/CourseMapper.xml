@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.pojo.Course">
+    <!--通过id查询课程信息-->
+    <select id="findById" parameterType="int"
+            resultType="com.example.demo.pojo.Course">
+    select * from c_course where id = #{id};
+  </select>
+
+    <!--通过学院查课程信息-->
+    <select id="findCourseBySchool" parameterType="String"
+            resultType="com.example.demo.pojo.Course">
+        select u.*
+        from c_course u, s_school o
+        where u.sid=o.id and o.schoolname=#{name}
+    </select>
+
+    <!--根据id更新课时-->
+    <update id="updateHoursById" parameterType="com.example.demo.pojo.Course">
+        update c_course set hours=#{hours} where id=#{id}
+    </update>
+
+    <!-- 插入数据 -->
+    <insert id="addCourse" parameterType="com.example.demo.pojo.Course">
+        insert into c_course(name,hours,sid)values(#{name},#{hours},#{sid})
+    </insert>
+
+    <!--查询所有学院的课程信息 -->
+    <select id="findAllCourseBySchool" parameterType="String"
+            resultMap="schoolWithCourseResult">
+     select u.*, o.id as school_id, o.schoolname
+     from c_course u, s_school o
+     where u.sid=o.id and o.schoolname=#{schoolname}
+     </select>
+    <resultMap id="schoolWithCourseResult" type="com.example.demo.pojo.School">
+        <id property="id" column="id"/>
+        <result property="schoolname" column="schoolname"/>
+        <collection property="courseList" ofType="com.example.demo.pojo.Course">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+            <result property="hours" column="hours"/>
+            <result property="sid" column="sid"/>
+        </collection>
+    </resultMap>
+
+
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.lemon.demo.dao.ICourseDao">
+
+    <insert id="add" parameterType="course">
+        INSERT INTO
+          `c_course`(`name`,`hours`,`sid`,`imgName`)
+        VALUES
+          (#{name},#{hours},#{sid},#{imgName})
+    </insert>
+
+    <delete id="delete">
+        delete from c_course where id = #{id}
+    </delete>
+
+    <select id="findAll" resultType="course">
+        select * from c_course  order by sid asc
+    </select>
+
+    <select id="findById" resultType="course">
+        select * from c_course where id = #{id}
+    </select>
+
+    <select id="findByName" resultType="course">
+        select * from c_course where name like concat(concat('%',#{name}),'%')
+    </select>
+
+    <select id="getRowCount" resultType="Integer">
+		select count(*) from c_course
+	</select>
+
+    <select id="queryPage" resultMap="result" parameterType="Integer">
+		select * from c_course order by id asc
+			limit #{startRows},5
+	</select>
+
+    <resultMap id="result" type="cn.lemon.demo.domain.Course">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="hours" column="hours"/>
+        <result property="sid" column="sid"/>
+        <result property="imgName" column="imgName"/>
+    </resultMap>
+
+    <update id="update">
+        update c_course
+        set name=#{name},hours=#{hours},sid=#{sid},imgName=#{imgName}
+        where c_course.id=#{id}
+    </update>
+
+    <update id="update1">
+        update c_course
+        set name=#{name},hours=#{hours},sid=#{sid}
+        where c_course.id=#{id}
+    </update>
+</mapper>
